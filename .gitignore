@@ -1,0 +1,15 @@
+# Build and Release Folders
+out/
+Obj/
+packages/
+**/wwwroot/lib_bower
+**/node_modules/
+
+# ***** angular2_mk ******
+**/wwwroot/App
+**/wwwroot/Core
+**/typings/
+# ***** end angular2_mk ******
+
+#ignore .suo VisualStudio files
+*.suo
