@@ -1,0 +1,4 @@
+
+interface tabsEasyEventInterface {
+    void onClose();
+}

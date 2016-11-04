@@ -5,8 +5,6 @@ import com.intellij.util.IconUtil;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 public class myCellRenderer extends JLabel

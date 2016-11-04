@@ -1,3 +1,4 @@
+import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
@@ -6,8 +7,6 @@ import com.sun.istack.internal.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,7 +14,7 @@ import java.util.List;
 
 public class tabsEasyGui
         extends DialogWrapper
-        implements KeyEventDispatcher, tabEasyEventInterface {
+        implements KeyEventDispatcher, tabsEasyEventInterface {
 
     private JPanel mainPanel;
     private JPanel centerPanel;
@@ -24,10 +23,14 @@ public class tabsEasyGui
     public tabsEasyGui(@Nullable Project proj, KeyEvent event) {
         super(proj);
 
+        PropertiesComponent props = PropertiesComponent.getInstance();
+        String fileTypeList = props.getValue("FileTypes", "**");
+
+
         List<VirtualFile> files = this.getOpenedFiles(proj);
         tabsEasyListManager mgr = new tabsEasyListManager(proj, files);
         mgr.setCloseEventListener(this);
-        mgr.createHeaders();
+        mgr.createHeaders(fileTypeList);
         mgr.createFileList();
 
         mgr.createListOnGui(centerPanel);

@@ -1,7 +1,7 @@
 <idea-plugin version="2">
     <id>tabsEasy.openDialog</id>
     <name>Tabs Easy</name>
-    <version>1.0</version>
+    <version>0.0.1</version>
     <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">AndrejR</vendor>
 
     <description><![CDATA[
@@ -25,6 +25,7 @@
     -->
 
     <extensions defaultExtensionNs="com.intellij">
+        <projectConfigurable instance="tabsEasyConfig"/>
         <!-- Add your extensions here -->
     </extensions>
 

@@ -1,3 +1,4 @@
+import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
@@ -17,9 +18,14 @@ public class tabsEasy extends AnAction {
         if ((project == null) || !(e.getInputEvent() instanceof KeyEvent)) {
             return;
         }
+        PropertiesComponent prop = PropertiesComponent.getInstance();
+
+        String definedExt = new tabsEasyConfigurationForm().fileDefinitionList.getText();
+        prop.setValue("FileTypes", definedExt);
+
         tabsEasyGui dlg = new tabsEasyGui(project, (KeyEvent) e.getInputEvent());
 
-        dlg.setTitle("Select File");
+        dlg.setTitle("Select opened file");
         dlg.createCenterPanel();
         dlg.show();
     }
