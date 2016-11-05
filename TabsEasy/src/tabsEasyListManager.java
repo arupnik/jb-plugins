@@ -9,7 +9,6 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class tabsEasyListManager {
@@ -71,7 +70,7 @@ public class tabsEasyListManager {
                 String name = extSplit[0];
                 String ext = extSplit[1];
 
-                if (this.isFileWithExtenstionOpen(ext))
+                if (this.isFileWithExtensionOpen(ext))
                     this.mItems.add(new tabsEasyListItem(name, ext, null));
             }
         }
@@ -128,7 +127,7 @@ public class tabsEasyListManager {
     }
 
 
-    private boolean isFileWithExtenstionOpen(String extension) {
+    private boolean isFileWithExtensionOpen(String extension) {
 
         for (int i = 0; i < this.mOpenedFiles.size(); i++) {
             VirtualFile file = this.mOpenedFiles.get(i);
@@ -162,8 +161,10 @@ public class tabsEasyListManager {
 
         JList sourceList = (JList) evt.getSource();
 
-        this.clearSelectionInOthersHeaders(sourceList);
-
+        if (evt.getClickCount() == 1) {
+            this.clearSelectionInOthersHeaders(sourceList);
+            this.highlightSimilarFileInOtherLists(sourceList);
+        }
         if (evt.getClickCount() == 2) {
 
             // Double-click detected
@@ -197,6 +198,29 @@ public class tabsEasyListManager {
 
             if (!header.mFilesJlist.equals(clickSource)) {
                 header.mFilesJlist.clearSelection();
+                System.out.print("Clearing selection...\n\r");
+            }
+        }
+    }
+
+    private void highlightSimilarFileInOtherLists(JList<VirtualFile> clickSource) {
+
+        // loop all headers, and select similar files
+        // in other headers.
+        for (int i = 0; i < this.mItems.size(); i++) {
+
+            tabsEasyListItem header = this.mItems.get(i);
+
+            if (!header.mFilesJlist.equals(clickSource)) {
+
+                for (int f = 0; f < header.mFiles.size(); f++) {
+
+                    VirtualFile origFile = clickSource.getSelectedValue();
+                    VirtualFile curFile = header.mFiles.get(f);
+
+                    if (curFile.getNameWithoutExtension().equals(origFile.getNameWithoutExtension()))
+                        header.mFilesJlist.setSelectedIndex(f);
+                }
             }
         }
     }
