@@ -3,11 +3,14 @@ import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.IdeFocusManager;
+import com.intellij.util.Time;
+import com.sun.istack.internal.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,7 +79,7 @@ public class tabsEasyListManager {
         }
     }
 
-    public void createFileList() {
+    public void createFileList(@Nullable VirtualFile openedFromFileInEditor) {
 
         // loop all headers created in createHeaders()
         // and associate opened files to this extension type
@@ -86,7 +89,8 @@ public class tabsEasyListManager {
             tabsEasyListItem item = this.mItems.get(i);
 
             // generate files for this header now
-            item.setFileList(this.getFilesByExtension(item.mExtension));
+            item.setFileList(this.getFilesByExtension(item.mExtension), openedFromFileInEditor);
+
             item.mFilesJlist.addMouseListener(new MouseAdapter() {
                 public void mouseClicked(MouseEvent evt) {
                     onCellClick(evt);
@@ -159,11 +163,17 @@ public class tabsEasyListManager {
      */
     private void onCellClick(MouseEvent evt) {
 
-        JList sourceList = (JList) evt.getSource();
+        JList<VirtualFile> sourceList = (JList) evt.getSource();
 
         if (evt.getClickCount() == 1) {
+            System.out.print(Instant.now().toString() + ": " + sourceList.getSelectedValue() + "\n\r");
             this.clearSelectionInOthersHeaders(sourceList);
             this.highlightSimilarFileInOtherLists(sourceList);
+
+            if (mCloseEvent != null) {
+                VirtualFile file = sourceList.getSelectedValue();
+                mCloseEvent.onFileSelection(file.getParent().getPresentableUrl());
+            }
         }
         if (evt.getClickCount() == 2) {
 
@@ -198,7 +208,6 @@ public class tabsEasyListManager {
 
             if (!header.mFilesJlist.equals(clickSource)) {
                 header.mFilesJlist.clearSelection();
-                System.out.print("Clearing selection...\n\r");
             }
         }
     }

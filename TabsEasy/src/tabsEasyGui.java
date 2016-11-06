@@ -18,9 +18,10 @@ public class tabsEasyGui
 
     private JPanel mainPanel;
     private JPanel centerPanel;
+    private JLabel pathLabel;
     private JButton button1;
 
-    public tabsEasyGui(@Nullable Project proj, KeyEvent event) {
+    public tabsEasyGui(@Nullable Project proj, KeyEvent event, @Nullable VirtualFile openedFromFileInEditor) {
         super(proj);
 
         PropertiesComponent props = PropertiesComponent.getInstance();
@@ -31,7 +32,7 @@ public class tabsEasyGui
         tabsEasyListManager mgr = new tabsEasyListManager(proj, files);
         mgr.setCloseEventListener(this);
         mgr.createHeaders(fileTypeList);
-        mgr.createFileList();
+        mgr.createFileList(openedFromFileInEditor);
 
         mgr.createListOnGui(centerPanel);
         init();
@@ -61,5 +62,11 @@ public class tabsEasyGui
     @Override
     public void onClose() {
         close(0);
+    }
+
+    @Override
+    public void onFileSelection(String folderPath) {
+
+        pathLabel.setText(folderPath);
     }
 }

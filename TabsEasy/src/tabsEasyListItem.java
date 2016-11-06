@@ -1,5 +1,6 @@
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.sun.istack.internal.Nullable;
 
 import javax.swing.*;
 import java.util.Collections;
@@ -25,13 +26,19 @@ public class tabsEasyListItem {
     /**
      * Desc here
      */
-    public void setFileList(List<VirtualFile> files) {
+    public void setFileList(List<VirtualFile> files, @Nullable VirtualFile openedFromFileInEditor) {
         Collections.sort(files, FILE_COMPARATOR);
         this.mFiles = files;
         this.mFilesJlist = new JList(files.toArray());
 
         this.mFilesJlist.setCellRenderer(new myCellRenderer());
         this.mFilesJlist.setFixedCellHeight(20);
+
+        // select file in list if tabsEasy dialog was opened from this file
+        if (this.mFiles.contains(openedFromFileInEditor)) {
+            int index = this.mFiles.indexOf(openedFromFileInEditor);
+            this.mFilesJlist.setSelectedIndex(index);
+        }
     }
 
     public int getFilesCount() {
